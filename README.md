@@ -72,7 +72,7 @@ python evaluate.py \
 
 ```shell
 pip install pre-commit
-pre-commit install-hooks # pre-commit will auto run on commit
+pre-commit install --install-hooks # pre-commit will auto run on commit
 pre-commit run --all-files
 ```
 
