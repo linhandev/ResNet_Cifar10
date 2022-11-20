@@ -25,7 +25,9 @@ def load_data(batch_size, do_aug=True):
     means = train_data.data.mean(axis=(0, 1, 2)) / 255
     stds = train_data.data.std(axis=(0, 1, 2)) / 255
 
-    test_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=means, std=stds)])
+    test_transforms = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize(mean=means, std=stds)]
+    )
 
     train_transforms = (
         transforms.Compose(
@@ -41,16 +43,22 @@ def load_data(batch_size, do_aug=True):
         else test_transforms
     )
 
-    train_data = datasets.CIFAR10(ROOT, train=True, download=True, transform=train_transforms)
+    train_data = datasets.CIFAR10(
+        ROOT, train=True, download=True, transform=train_transforms
+    )
 
-    test_data = datasets.CIFAR10(ROOT, train=False, download=True, transform=test_transforms)
+    test_data = datasets.CIFAR10(
+        ROOT, train=False, download=True, transform=test_transforms
+    )
 
     VALID_RATIO = 0.9
 
     n_train_examples = int(len(train_data) * VALID_RATIO)
     n_valid_examples = len(train_data) - n_train_examples
 
-    train_data, valid_data = data.random_split(train_data, [n_train_examples, n_valid_examples])
+    train_data, valid_data = data.random_split(
+        train_data, [n_train_examples, n_valid_examples]
+    )
 
     # train_iterator = data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
 

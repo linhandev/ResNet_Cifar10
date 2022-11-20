@@ -2,14 +2,14 @@
 
 ## Installing Dependencies
 
-- Install [cuda](https://developer.nvidia.com/cuda-downloads) and [cudnn](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html). Newer versions are prefered. 
-  
+- Install [cuda](https://developer.nvidia.com/cuda-downloads) and [cudnn](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html). Newer versions are prefered.
+
   - It's also possible to get cuda enviroment through [docker](https://hub.docker.com/r/nvidia/cuda/tags). On linux distros not officially supported by Nvidia this can be easier. Choose a tag with cudnn and devel in it, eg: `nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04`
 
 - Install pytorch following [official documentation](https://pytorch.org/get-started/locally/)
 
 - Install other dependencies with
-  
+
   ```shell
   pip install -r requirements.txt
   ```
@@ -52,8 +52,8 @@ parameters
 | --loss                | Loss function to use                                                     | bce / focal                             |
 | --model-save-path     | Where to save trained model, training config record and tensorboard log  | ./output                                |
 
-
 Use tensorboard to see training updates in real time.
+
 ```shell
 tensorboard --logdir ./output
 ```
@@ -66,8 +66,16 @@ Example usage:
 python evaluate.py \
     --model-name 'resnet_de_resblock' \
     --model-save-path ./output/resnet_de_resblock-1668939199
-    
+```
+
+## Code formatting
+
+```shell
+pip install pre-commit
+pre-commit install-hooks # pre-commit will auto run on commit
+pre-commit run --all-files
 ```
 
 ## The team
+
 [](), [](), [linhandev](https://github.com/linhandev/ResNet_Cifar10)

@@ -134,19 +134,22 @@ def trainer(
     # train_iterator, valid_iterator, test_iterator = load_data(batch_size, do_aug)
 
     train_data, valid_data, test_data = load_data(batch_size, do_aug)
-    train_iterator = data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=8)
-    valid_iterator = data.DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=8)
+    train_iterator = data.DataLoader(
+        train_data, batch_size=batch_size, shuffle=True, num_workers=8
+    )
+    valid_iterator = data.DataLoader(
+        valid_data, batch_size=batch_size, shuffle=False, num_workers=8
+    )
 
     model = model_choice(model_name).to(device)
     num_param = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    if loss == 'bce':
+    if loss == "bce":
         criterion = nn.CrossEntropyLoss().to(device)
-    elif loss == 'focal':
+    elif loss == "focal":
         criterion = focal_loss
     else:
         print(f"{loss} loss not supported")
 
-    
     if optimizer == "Adam":
         optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     elif optimizer == "AdamW":
@@ -161,7 +164,9 @@ def trainer(
         if scheduler == "ReduceLROnPlateau":
             scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
         elif scheduler == "PolynomialLR":
-            scheduler = optim.lr_scheduler.PolynomialLR(optimizer, total_iters=num_epoch, verbose=True)
+            scheduler = optim.lr_scheduler.PolynomialLR(
+                optimizer, total_iters=num_epoch, verbose=True
+            )
         else:
             print(f"Invalid lr scheduler {scheduler}")
             exit()
@@ -177,11 +182,17 @@ def trainer(
             if epoch == bs_increase_at[bs_increase_idx]:
                 batch_size = int(batch_size * bs_increase_by[bs_increase_idx])
                 print(f"increasing bs to {batch_size}")
-                train_iterator = data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
-                valid_iterator = data.DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=4)
+                train_iterator = data.DataLoader(
+                    train_data, batch_size=batch_size, shuffle=True, num_workers=4
+                )
+                valid_iterator = data.DataLoader(
+                    valid_data, batch_size=batch_size, shuffle=False, num_workers=4
+                )
 
         # 2.1 train
-        train_loss, train_acc, n_step = train(model, train_iterator, optimizer, criterion, device, writer, n_sample)
+        train_loss, train_acc, n_step = train(
+            model, train_iterator, optimizer, criterion, device, writer, n_sample
+        )
         # 2.2 validation
         valid_loss, valid_acc = evaluate(model, valid_iterator, criterion, device)
         writer.add_scalars("Val", {"acc": valid_acc, "loss": valid_loss}, epoch)
@@ -240,12 +251,16 @@ def evaluater(
     # _, _, test_loader = load_data(512)
 
     _, _, test_data = load_data(512)
-    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=2)
+    test_iterator = data.DataLoader(
+        test_data, batch_size=512, shuffle=False, num_workers=2
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     best_model = model_choice(model_name).to(device)
-    best_model.load_state_dict(torch.load(Path(model_save_path) / f"{model_name}_best.pt"))
+    best_model.load_state_dict(
+        torch.load(Path(model_save_path) / f"{model_name}_best.pt")
+    )
 
     criterion = nn.CrossEntropyLoss().to(device)
     test_loss, test_acc = evaluate(best_model, test_iterator, criterion, device)
@@ -276,7 +291,9 @@ if __name__ == "__main__":
     opt = vars(parser.parse_args())
 
     # attatch a run id to model save path
-    opt["model_save_path"] = Path(opt["model_save_path"]) / f"{opt['model_name']}-{str(int(time.time()))}"
+    opt["model_save_path"] = (
+        Path(opt["model_save_path"]) / f"{opt['model_name']}-{str(int(time.time()))}"
+    )
     opt["model_save_path"].mkdir(parents=True)
     print(f"This run saves to {opt['model_save_path']._str}")
 

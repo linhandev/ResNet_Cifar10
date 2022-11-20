@@ -58,15 +58,21 @@ def evaluater(model_name, model_save_path):
     # _, _, test_iterator = load_data(512)
 
     _, _, test_data = load_data(512)
-    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=2)
-
+    test_iterator = data.DataLoader(
+        test_data, batch_size=512, shuffle=False, num_workers=2
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     best_model = model_choice(model_name).to(device)
-    best_model.load_state_dict(torch.load(Path(model_save_path) / f"{model_name}_best.pt", map_location=device))
+    best_model.load_state_dict(
+        torch.load(Path(model_save_path) / f"{model_name}_best.pt", map_location=device)
+    )
 
-    print("number of parameters:", sum(p.numel() for p in best_model.parameters() if p.requires_grad))
+    print(
+        "number of parameters:",
+        sum(p.numel() for p in best_model.parameters() if p.requires_grad),
+    )
 
     criterion = nn.CrossEntropyLoss().to(device)
     test_loss, test_acc = evaluate(best_model, test_iterator, criterion, device)
@@ -77,6 +83,10 @@ def evaluater(model_name, model_save_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-name", type=str, default="resnet")
-    parser.add_argument("--model-save-path", type=str, default="/scratch/hp2173/DL_MiniProject/model_checkpoint/")
+    parser.add_argument(
+        "--model-save-path",
+        type=str,
+        default="/scratch/hp2173/DL_MiniProject/model_checkpoint/",
+    )
     opt = parser.parse_args()
     evaluater(**vars(opt))
