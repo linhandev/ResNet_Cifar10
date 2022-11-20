@@ -14,7 +14,6 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.utils.data as data
 import torchvision.transforms as T
 from torchvision.ops import focal_loss
-import matplotlib.pyplot as plt
 import numpy as np
 
 from data.load_data import load_data
@@ -288,7 +287,7 @@ if __name__ == "__main__":
     trainer(**opt, writer=writer, opt=opt)
 
     # 2. run evaluation
-    evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
+    # evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
 
 
 """
@@ -300,25 +299,4 @@ python train.py \
     --optimizer AdamW \
     --scheduler ReduceLROnPlateau \
     --bs-increase 20
-    
-python train.py \
-    --model-name 'resnet_de_resblock' \
-    --num-epoch 50 \
-    --batch-size 64 \
-    --learning-rate 1e-3 \
-    --optimizer Adam \
-    --scheduler ReduceLROnPlateau \
-    --bs-increase-at 15,30,45 \
-    --bs-increase-by 2,2,2
-    
-
-python train.py \
-    --model-name 'resnet_de_resblock' \
-    --num-epoch 50 \
-    --batch-size 64 \
-    --learning-rate 1e-3 \
-    --optimizer Adam \
-    --scheduler ReduceLROnPlateau \
-    --bs-increase-at 30 \
-    --bs-increase-by 4
 """
