@@ -134,12 +134,8 @@ def trainer(
     # train_iterator, valid_iterator, test_iterator = load_data(batch_size, do_aug)
 
     train_data, valid_data, test_data = load_data(batch_size, do_aug)
-    train_iterator = data.DataLoader(
-        train_data, batch_size=batch_size, shuffle=True, num_workers=8
-    )
-    valid_iterator = data.DataLoader(
-        valid_data, batch_size=batch_size, shuffle=False, num_workers=8
-    )
+    train_iterator = data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=8)
+    valid_iterator = data.DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=8)
 
     model = model_choice(model_name).to(device)
     num_param = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -164,9 +160,7 @@ def trainer(
         if scheduler == "ReduceLROnPlateau":
             scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
         elif scheduler == "PolynomialLR":
-            scheduler = optim.lr_scheduler.PolynomialLR(
-                optimizer, total_iters=num_epoch, verbose=True
-            )
+            scheduler = optim.lr_scheduler.PolynomialLR(optimizer, total_iters=num_epoch, verbose=True)
         else:
             print(f"Invalid lr scheduler {scheduler}")
             exit()
@@ -182,17 +176,11 @@ def trainer(
             if epoch == bs_increase_at[bs_increase_idx]:
                 batch_size = int(batch_size * bs_increase_by[bs_increase_idx])
                 print(f"increasing bs to {batch_size}")
-                train_iterator = data.DataLoader(
-                    train_data, batch_size=batch_size, shuffle=True, num_workers=4
-                )
-                valid_iterator = data.DataLoader(
-                    valid_data, batch_size=batch_size, shuffle=False, num_workers=4
-                )
+                train_iterator = data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
+                valid_iterator = data.DataLoader(valid_data, batch_size=batch_size, shuffle=False, num_workers=4)
 
         # 2.1 train
-        train_loss, train_acc, n_step = train(
-            model, train_iterator, optimizer, criterion, device, writer, n_sample
-        )
+        train_loss, train_acc, n_step = train(model, train_iterator, optimizer, criterion, device, writer, n_sample)
         # 2.2 validation
         valid_loss, valid_acc = evaluate(model, valid_iterator, criterion, device)
         writer.add_scalars("Val", {"acc": valid_acc, "loss": valid_loss}, epoch)
@@ -224,7 +212,7 @@ def trainer(
             torch.save(model.state_dict(), model_save_path / f"{model_name}_best.pt")
             min_valid_loss = valid_loss
             min_eval_loss_at = epoch
-            print("The current min train_loss: %.5f" % (min_valid_loss))
+            print("The current min validation_loss: %.5f" % (min_valid_loss))
 
         print("---------------------------------------------")
 
@@ -251,16 +239,12 @@ def evaluater(
     # _, _, test_loader = load_data(512)
 
     _, _, test_data = load_data(512)
-    test_iterator = data.DataLoader(
-        test_data, batch_size=512, shuffle=False, num_workers=2
-    )
+    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=2)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     best_model = model_choice(model_name).to(device)
-    best_model.load_state_dict(
-        torch.load(Path(model_save_path) / f"{model_name}_best.pt")
-    )
+    best_model.load_state_dict(torch.load(Path(model_save_path) / f"{model_name}_best.pt"))
 
     criterion = nn.CrossEntropyLoss().to(device)
     test_loss, test_acc = evaluate(best_model, test_iterator, criterion, device)
@@ -291,9 +275,7 @@ if __name__ == "__main__":
     opt = vars(parser.parse_args())
 
     # attatch a run id to model save path
-    opt["model_save_path"] = (
-        Path(opt["model_save_path"]) / f"{opt['model_name']}-{str(int(time.time()))}"
-    )
+    opt["model_save_path"] = Path(opt["model_save_path"]) / f"{opt['model_name']}-{str(int(time.time()))}"
     opt["model_save_path"].mkdir(parents=True)
     print(f"This run saves to {opt['model_save_path']._str}")
 
@@ -304,16 +286,16 @@ if __name__ == "__main__":
     trainer(**opt, writer=writer, opt=opt)
 
     # 2. run evaluation
-    # evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
+    evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
 
 
 """
 python train.py \
     --model-name 'resnet_de_resblock' \
-    --num-epoch 50 \
-    --batch-size 64 \
+    --num-epoch 200 \
+    --batch-size 128 \
     --learning-rate 1e-3 \
-    --optimizer AdamW \
-    --scheduler ReduceLROnPlateau \
-    --bs-increase 20
+    --optimizer AdamW
+    # --scheduler ReduceLROnPlateau
+    # --bs-increase 20
 """
