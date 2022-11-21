@@ -142,7 +142,10 @@ def trainer(
     if loss == "bce":
         criterion = nn.CrossEntropyLoss().to(device)
     elif loss == "focal":
-        criterion = focal_loss
+        # BUG: still has bug
+        criterion = lambda y_pred, y: focal_loss.sigmoid_focal_loss(
+            y_pred, F.one_hot(y, 10), alpha=-1, reduction="mean"
+        )
     else:
         print(f"{loss} loss not supported")
 
@@ -166,7 +169,7 @@ def trainer(
             exit()
 
     min_valid_loss = torch.inf
-    min_eval_loss_at = 0
+    min_valid_loss_at = 0
     n_sample = 0  # record based on number of samples trained, to keep the plots comparable across varying batch size
 
     # 2. run training and validataion
@@ -211,8 +214,8 @@ def trainer(
         if min_valid_loss > valid_loss:
             torch.save(model.state_dict(), model_save_path / f"{model_name}_best.pt")
             min_valid_loss = valid_loss
-            min_eval_loss_at = epoch
-            print("The current min validation_loss: %.5f" % (min_valid_loss))
+            min_valid_loss_at = epoch
+            print("The current min validation loss: %.5f" % (min_valid_loss))
 
         print("---------------------------------------------")
 
@@ -220,14 +223,16 @@ def trainer(
     print(f"Training finished, took {training_time:.2f} mins")
 
     # 3. save training configuration and some stats for easier experiment management
+    save_path = opt["model_save_path"]
+    opt["model_save_path"] = save_path._str
+
     opt["num_param"] = num_param
     opt["min_valid_loss"] = min_valid_loss
+    opt["min_valid_loss_at"] = min_valid_loss_at
     opt["training_time"] = training_time
-    save_path = opt["model_save_path"]
     opt["run_id"] = save_path.name.split("-")[-1]
-    opt["model_save_path"] = save_path._str
     opt["model"] = str(model)
-    opt["min_eval_loss_at"] = min_eval_loss_at
+
     (save_path / "configs.json").write_text(json.dumps(opt))
 
 
@@ -261,12 +266,12 @@ def evaluater(
 if __name__ == "__main__":
     # 0. parse training parameters
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-name", type=str, default="resnet")
+    parser.add_argument("--model-name", type=str, default="resnet_de_resblock")
     parser.add_argument("--num-epoch", type=int, default=50)
-    parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--learning-rate", type=float, default=0.0001)
+    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--learning-rate", type=float, default=1e-3)
     parser.add_argument("--do-aug", type=bool, default=True)
-    parser.add_argument("--optimizer", type=str, default="Adam")
+    parser.add_argument("--optimizer", type=str, default="AdamW")
     parser.add_argument("--scheduler", type=str, default=None)
     parser.add_argument("--bs-increase-at", nargs="*", type=int, default=[])
     parser.add_argument("--bs-increase-by", nargs="*", type=int, default=[])
@@ -286,16 +291,18 @@ if __name__ == "__main__":
     trainer(**opt, writer=writer, opt=opt)
 
     # 2. run evaluation
-    evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
+    # evaluater(model_name=opt["model_name"], model_save_path=opt["model_save_path"], writer=writer)
 
 
 """
 python train.py \
     --model-name 'resnet_de_resblock' \
-    --num-epoch 200 \
-    --batch-size 128 \
+    --num-epoch 50 \
+    --batch-size 1 \
     --learning-rate 1e-3 \
-    --optimizer AdamW
-    # --scheduler ReduceLROnPlateau
-    # --bs-increase 20
+    --optimizer SGD \
+    --scheduler ReduceLROnPlateau \
+    --bs-increase-at 30 \
+    --bs-increase-by 2
+
 """

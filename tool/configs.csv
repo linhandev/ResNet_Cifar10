@@ -1,0 +1,5 @@
+model-name,num-epoch,batch-size,learning-rate,do-aug,optimizer,scheduler,bs-increase-at,bs-increase-by,loss
+resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,,,,,,,,,
+resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,,,,,,,,,

@@ -1,2 +1,5 @@
+torch
+torchvision
+torchaudio
 tensorboard
 numpy

@@ -58,16 +58,12 @@ def evaluater(model_name, model_save_path):
     # _, _, test_iterator = load_data(512)
 
     _, _, test_data = load_data(512)
-    test_iterator = data.DataLoader(
-        test_data, batch_size=512, shuffle=False, num_workers=2
-    )
+    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=2)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     best_model = model_choice(model_name).to(device)
-    best_model.load_state_dict(
-        torch.load(Path(model_save_path) / f"{model_name}_best.pt", map_location=device)
-    )
+    best_model.load_state_dict(torch.load(Path(model_save_path) / f"{model_name}_best.pt", map_location=device))
 
     print(
         "number of parameters:",
