@@ -125,9 +125,6 @@ def trainer(
     loss: str,
     writer: torch.utils.tensorboard.writer.SummaryWriter,
 ):
-    # 0. record start time
-    tic = time.time()
-
     # 1. load data, setup model and other training related components
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -171,6 +168,7 @@ def trainer(
     min_valid_loss = torch.inf
     min_valid_loss_at = 0
     n_sample = 0  # record based on number of samples trained, to keep the plots comparable across varying batch size
+    tic = time.time()
 
     # 2. run training and validataion
     for epoch in range(1, num_epoch + 1):
@@ -199,7 +197,7 @@ def trainer(
 
         # 2.4 print training progress
         print(
-            "Epoch:%d -> train_loss:%.5f, train_acc:%.5f || valid_loss:%.5f, valid_acc:%.5f || ETR:%.2f min"
+            "Epoch:%d -> train_loss:%.5f, train_acc:%.5f || valid_loss:%.5f, valid_acc:%.5f || Estimated time remaining:%.2f min"
             % (
                 epoch,
                 train_loss,

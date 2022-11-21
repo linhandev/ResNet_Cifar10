@@ -6,18 +6,13 @@ HERE = Path(__file__).parent.absolute()
 strip = lambda v: v.strip().strip('"').strip("'").strip()
 
 configs = open(HERE / "configs.csv", "r").readlines()
-keys = configs[0].strip().split(",")
+keys = configs[0].strip().split(",")[1:]
 keys = [k for k in keys]
-configs = [[strip(v) for v in c.strip().split(",")] for c in configs[1:]]
+configs = [[strip(v) for v in c.strip().split(",")[1:]] for c in configs[1:]]
 configs = [{k: v for k, v in zip(keys, c)} for c in configs if c[0] != ""]
-
-print(configs)
 
 prev_configs = [json.loads(p.read_text()) for p in (HERE / ".." / "output").glob("*/configs.json")]
 prev_configs = [{k: str(c.get(k.replace("-", "_"), "")) for k in keys} for c in prev_configs]
-
-# for c in prev_configs:
-#     print(c)
 
 for idx, conf in enumerate(configs):
     print("===========================================")

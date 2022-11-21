@@ -1,5 +1,17 @@
-model-name,num-epoch,batch-size,learning-rate,do-aug,optimizer,scheduler,bs-increase-at,bs-increase-by,loss
-resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
-,,,,,,,,,
-resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
-,,,,,,,,,
+write anything OTHER THAN COMMA in this column. its not used as config,model-name,num-epoch,batch-size,learning-rate,do-aug,optimizer,scheduler,bs-increase-at,bs-increase-by,loss
+Training config tuning. Only resnet_de_resblock is used here,,,,,,,,,,
+best config so far,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,,,,,,,,,,
+different fixed batch sizes,resnet_de_resblock,50,64,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,256,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,512,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,1024,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,2048,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+different optimizers,,,,,,,,,,
+,resnet_de_resblock,50,128,1e-3,True,SGD,ReduceLROnPlateau,30,2,bce
+,resnet_de_resblock,50,128,1e-3,True,Adam,ReduceLROnPlateau,30,2,bce
+different schedulers,,,,,,,,,,
+fixed lr,resnet_de_resblock,50,128,1e-3,True,AdamW,,30,2,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,PolynomialLR,30,2,bce
