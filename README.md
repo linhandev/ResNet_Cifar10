@@ -60,6 +60,8 @@ tensorboard --logdir ./output
 
 ## Evaluation
 
+The model pt file should be placed at `/{model-save-path}/{model-name}_best.pt`
+
 Example usage:
 
 ```shell
