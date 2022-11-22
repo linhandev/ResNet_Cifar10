@@ -80,4 +80,4 @@ pre-commit run --all-files
 
 ## The team
 
-[Haoyang Pei](https://github.com/HaoyangPei), [](), [linhandev](https://github.com/linhandev)
+[Haoyang Pei](https://github.com/HaoyangPei), [Samyak Rawlekar](https://samyakr99.github.io/), [linhandev](https://github.com/linhandev)
