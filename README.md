@@ -70,6 +70,23 @@ python evaluate.py \
     --model-save-path ./output/resnet_de_resblock-1668939199
 ```
 
+## Batch scripts
+
+Specify training configs in [tool/configs.csv](tool/configs.csv) and then run
+
+```shell
+python tool/batch_train.py
+```
+
+The script will search for new configs and run training.
+
+Similarly, run
+
+```shell
+python tool/batch_test.py
+```
+The script will search for training records that haven't performed testing, run test and generate a report at `tool/test_results.csv`
+
 ## Code formatting
 
 ```shell
