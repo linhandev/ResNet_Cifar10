@@ -54,11 +54,10 @@ def calculate_accuracy(y_pred, y):
 
 
 def evaluater(model_name, model_save_path):
-
-    # _, _, test_iterator = load_data(512)
+    model_save_path = Path(model_save_path)
 
     _, _, test_data = load_data(512)
-    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=2)
+    test_iterator = data.DataLoader(test_data, batch_size=512, shuffle=False, num_workers=8)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -74,6 +73,11 @@ def evaluater(model_name, model_save_path):
     test_loss, test_acc = evaluate(best_model, test_iterator, criterion, device)
 
     print("test_loss:", test_loss, "test_accuracy", test_acc)
+
+    info = json.loads((model_save_path / "info.json").read_text())
+    info["test_loss"] = test_loss
+    info["test_accuracy"] = test_acc
+    print(json.dumps(info, indent=4), file=open(model_save_path / "info.json", "w"))
 
 
 if __name__ == "__main__":

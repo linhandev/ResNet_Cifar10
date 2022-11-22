@@ -2,16 +2,28 @@ write anything OTHER THAN COMMA in this column. its not used as config,model-nam
 Training config tuning. Only resnet_de_resblock is used here,,,,,,,,,,
 best config so far,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
 ,,,,,,,,,,
-different fixed batch sizes,resnet_de_resblock,50,64,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+fixed batch sizes,resnet_de_resblock,50,64,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
 ,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
 ,resnet_de_resblock,50,256,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
 ,resnet_de_resblock,50,512,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
 ,resnet_de_resblock,50,1024,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
 ,resnet_de_resblock,50,2048,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
-different optimizers,,,,,,,,,,
+optimizers,,,,,,,,,,
 ,resnet_de_resblock,50,128,1e-3,True,SGD,ReduceLROnPlateau,30,2,bce
 ,resnet_de_resblock,50,128,1e-3,True,Adam,ReduceLROnPlateau,30,2,bce
-different schedulers,,,,,,,,,,
+schedulers,,,,,,,,,,
 fixed lr,resnet_de_resblock,50,128,1e-3,True,AdamW,,30,2,bce
 ,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
 ,resnet_de_resblock,50,128,1e-3,True,AdamW,PolynomialLR,30,2,bce
+,,,,,,,,,,
+changing batch size,,,,,,,,,,
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,,,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,30,4,bce
+,resnet_de_resblock,50,256,1e-3,True,AdamW,ReduceLROnPlateau,30,2,bce
+,resnet_de_resblock,50,64,1e-3,True,AdamW,ReduceLROnPlateau,30 40,2 2,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,40,2,bce
+,resnet_de_resblock,50,128,1e-3,True,AdamW,ReduceLROnPlateau,45,2,bce
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

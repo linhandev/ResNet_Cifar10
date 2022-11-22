@@ -125,6 +125,11 @@ def trainer(
     loss: str,
     writer: torch.utils.tensorboard.writer.SummaryWriter,
 ):
+    # 0. save training configs
+    save_path = opt["model_save_path"]
+    opt["model_save_path"] = save_path._str
+    (save_path / "info.json").write_text(json.dumps(opt))
+
     # 1. load data, setup model and other training related components
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -197,7 +202,7 @@ def trainer(
 
         # 2.4 print training progress
         print(
-            "Epoch:%d -> train_loss:%.5f, train_acc:%.5f || valid_loss:%.5f, valid_acc:%.5f || Estimated time remaining:%.2f min"
+            "Epoch:%d -> train_loss:%.5f, train_acc:%.5f || val_loss:%.5f, val_acc:%.5f || Time to finish: %.2f min"
             % (
                 epoch,
                 train_loss,
@@ -221,17 +226,17 @@ def trainer(
     print(f"Training finished, took {training_time:.2f} mins")
 
     # 3. save training configuration and some stats for easier experiment management
-    save_path = opt["model_save_path"]
     opt["model_save_path"] = save_path._str
-
     opt["num_param"] = num_param
     opt["min_valid_loss"] = min_valid_loss
     opt["min_valid_loss_at"] = min_valid_loss_at
     opt["training_time"] = training_time
     opt["run_id"] = save_path.name.split("-")[-1]
     opt["model"] = str(model)
+    opt["bs_increase_at"] = " ".join(map(str, opt["bs_increase_at"]))
+    opt["bs_increase_by"] = " ".join(map(str, opt["bs_increase_by"]))
 
-    (save_path / "configs.json").write_text(json.dumps(opt))
+    (save_path / "info.json").write_text(json.dumps(opt, indent=2))
 
 
 def evaluater(
