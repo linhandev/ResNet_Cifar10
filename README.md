@@ -78,4 +78,4 @@ pre-commit run --all-files
 
 ## The team
 
-[](), [](), [linhandev](https://github.com/linhandev/ResNet_Cifar10)
+[](), [](), [linhandev](https://github.com/linhandev)
