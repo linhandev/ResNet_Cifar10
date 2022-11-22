@@ -3,3 +3,4 @@ torchvision
 torchaudio
 tensorboard
 numpy
+pandas
