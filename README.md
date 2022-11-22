@@ -78,4 +78,4 @@ pre-commit run --all-files
 
 ## The team
 
-[](), [](), [linhandev](https://github.com/linhandev)
+[Haoyang Pei](https://github.com/HaoyangPei), [](), [linhandev](https://github.com/linhandev)
